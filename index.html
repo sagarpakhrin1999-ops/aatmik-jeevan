@@ -3,65 +3,446 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>आत्मिक जीवनको सन्देश</title>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,"Noto Sans Devanagari",sans-serif;background:#f4f6f9;color:#1f2937;line-height:1.7}
-.hero{background:linear-gradient(135deg,#172554,#1e3a8a,#312e81);color:white;text-align:center;padding:65px 20px 55px}
-.hero .icon{font-size:42px;margin-bottom:10px}
-.hero h1{font-size:32px;margin-bottom:8px}
-.hero p{font-size:17px;opacity:.9}
-.container{max-width:900px;width:92%;margin:35px auto}
-.welcome{background:white;border-radius:20px;padding:28px;text-align:center;box-shadow:0 8px 25px rgba(0,0,0,.08);margin-bottom:30px}
-.welcome h2{color:#1e3a8a;margin-bottom:10px}
-.section-title{text-align:center;margin-bottom:20px;color:#172554}
-.paths{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
-.card{background:white;border-radius:20px;padding:24px;box-shadow:0 8px 25px rgba(0,0,0,.08);transition:.25s;border:1px solid #e5e7eb}
-.card:hover{transform:translateY(-5px);box-shadow:0 12px 30px rgba(0,0,0,.13)}
-.number{font-size:14px;font-weight:bold;color:#6366f1;margin-bottom:8px}
-.card h3{font-size:20px;color:#172554;margin-bottom:8px}
-.card p{font-size:14px;color:#6b7280;margin-bottom:18px}
-.btn{display:inline-block;background:#1e3a8a;color:white;text-decoration:none;padding:9px 17px;border-radius:10px;font-size:14px}
-.btn:hover{background:#172554}
-footer{margin-top:45px;background:#111827;color:#d1d5db;text-align:center;padding:28px 15px;font-size:14px}
-@media(max-width:500px){.hero h1{font-size:27px}.hero{padding:50px 15px}.welcome{padding:22px}.card{padding:21px}}
+*{
+box-sizing:border-box;
+margin:0;
+padding:0
+}
+
+body{
+font-family:Arial,"Noto Sans Devanagari",sans-serif;
+background:#f4f7fb;
+color:#172033;
+line-height:1.8
+}
+
+/* HERO */
+
+.hero{
+background:
+linear-gradient(135deg,#0f172a,#1e3a8a,#3730a3);
+color:white;
+text-align:center;
+padding:60px 20px 55px;
+position:relative;
+overflow:hidden
+}
+
+.hero:after{
+content:"";
+position:absolute;
+width:300px;
+height:300px;
+border-radius:50%;
+background:rgba(255,255,255,.05);
+top:-130px;
+right:-100px
+}
+
+.icon{
+font-size:48px;
+margin-bottom:8px
+}
+
+.hero h1{
+font-size:34px;
+margin-bottom:8px;
+font-weight:700
+}
+
+.hero p{
+font-size:16px;
+opacity:.9
+}
+
+/* MAIN */
+
+.container{
+max-width:900px;
+width:92%;
+margin:32px auto
+}
+
+/* TODAY */
+
+.today{
+background:white;
+border-radius:22px;
+padding:28px;
+margin-bottom:30px;
+box-shadow:0 10px 30px rgba(15,23,42,.10);
+border:1px solid #e5e7eb;
+position:relative;
+overflow:hidden
+}
+
+.today:before{
+content:"";
+position:absolute;
+left:0;
+top:0;
+width:100%;
+height:5px;
+background:linear-gradient(90deg,#f59e0b,#f97316,#ef4444)
+}
+
+.today-label{
+display:inline-block;
+background:#fff7ed;
+color:#c2410c;
+padding:6px 12px;
+border-radius:20px;
+font-size:13px;
+font-weight:bold;
+margin-bottom:12px
+}
+
+.today h2{
+color:#172554;
+font-size:25px;
+margin-bottom:8px
+}
+
+.today p{
+color:#4b5563;
+margin-bottom:18px
+}
+
+.today-verse{
+background:#f8fafc;
+border-left:4px solid #1e3a8a;
+padding:15px;
+border-radius:10px;
+margin:15px 0;
+font-size:16px
+}
+
+/* BUTTON */
+
+.btn{
+display:inline-block;
+background:#1e3a8a;
+color:white;
+text-decoration:none;
+padding:10px 18px;
+border-radius:10px;
+font-size:14px;
+font-weight:bold;
+transition:.2s
+}
+
+.btn:hover{
+background:#172554;
+transform:translateY(-2px)
+}
+
+/* TITLE */
+
+.section-title{
+text-align:center;
+color:#172554;
+font-size:23px;
+margin:35px 0 20px
+}
+
+.section-subtitle{
+text-align:center;
+color:#6b7280;
+font-size:14px;
+margin-top:-12px;
+margin-bottom:25px
+}
+
+/* PATHS */
+
+.paths{
+display:flex;
+flex-direction:column;
+gap:18px
+}
+
+.card{
+background:white;
+border-radius:18px;
+padding:23px;
+box-shadow:0 7px 24px rgba(15,23,42,.07);
+border:1px solid #e5e7eb;
+transition:.25s
+}
+
+.card:hover{
+transform:translateY(-3px);
+box-shadow:0 12px 30px rgba(15,23,42,.12)
+}
+
+.card-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-bottom:8px
+}
+
+.number{
+font-size:12px;
+font-weight:bold;
+color:#6366f1;
+letter-spacing:1px
+}
+
+.new{
+background:#dcfce7;
+color:#15803d;
+font-size:11px;
+font-weight:bold;
+padding:4px 9px;
+border-radius:20px
+}
+
+.card h3{
+font-size:20px;
+color:#172554;
+margin-bottom:7px
+}
+
+.card p{
+font-size:14px;
+color:#6b7280;
+margin-bottom:17px
+}
+
+/* OLD PATH */
+
+.old{
+opacity:.96
+}
+
+/* FOOTER */
+
+footer{
+margin-top:50px;
+background:#0f172a;
+color:#cbd5e1;
+text-align:center;
+padding:30px 15px;
+font-size:14px
+}
+
+footer strong{
+color:white
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+.hero{
+padding:50px 16px 45px
+}
+
+.hero h1{
+font-size:28px
+}
+
+.container{
+width:94%;
+margin:25px auto
+}
+
+.today{
+padding:23px
+}
+
+.today h2{
+font-size:22px
+}
+
+.card{
+padding:20px
+}
+
+.card h3{
+font-size:18px
+}
+}
 </style>
+    <script data-goatcounter="https://aatmikjeevan.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
+
 <body>
+
 <header class="hero">
+
 <div class="icon">✦</div>
+
 <h1>आत्मिक जीवनको सन्देश</h1>
+
 <p>परमेश्वरको वचनबाट आत्मिक यात्रा</p>
+
 </header>
 
+
 <main class="container">
-<section class="welcome">
-<h2>आत्मिक यात्रामा स्वागत छ</h2>
-<p>परमेश्वरको वचनबाट सिक्दै आफ्नो आत्मिक जीवनलाई बलियो बनाऔँ। विश्वास, आशा, प्रेम र सत्यको यात्रामा अघि बढौँ।</p>
+
+<!-- TODAY'S WORD -->
+
+<section class="today">
+
+<div class="today-label">
+✦ आजको आत्मिक वचन
+</div>
+
+<h2>आफूतिर होइन, ख्रीष्टतिर हेरौँ</h2>
+
+<p>
+आफ्नो कमजोरी, पाप र समस्यामा मात्र नअड्किऔँ।
+हाम्रो दृष्टि येशू ख्रीष्टतिर लगाऔँ।
+</p>
+
+<div class="today-verse">
+
+<strong>“येशूतिर आँखा लगाऔँ।”</strong>
+
+<br>
+
+— हिब्रू १२:२
+
+</div>
+
+<a class="btn" href="path-3.html">
+आजको वचन पढ्नुहोस् →
+</a>
+
 </section>
 
-<h2 class="section-title">आत्मिक अध्ययनका सन्देशहरू</h2>
+
+<!-- PATH LIST -->
+
+<h2 class="section-title">
+📖 आत्मिक अध्ययनका सन्देशहरू
+</h2>
+
+
+
 
 <section class="paths">
+
+
+<!-- PATH 03 -->
+
 <article class="card">
-<div class="number">PATH 01</div>
-<h3>जीवनको गोल्यतलाई परास्त गरौँ</h3>
-<p>आफ्नो शक्तिमा होइन, परमेश्वरको शक्तिमा भर परौँ।<br>डरमा होइन, विश्वासमा अघि बढौँ।</p>
-<a class="btn" href="path-1.html">सन्देश पढ्नुहोस् →</a>
+
+<div class="card-top">
+
+<div class="number">
+PATH 03
+</div>
+
+<div class="new">
+नयाँ
+</div>
+
+</div>
+
+<h3>
+आफूतिर होइन, ख्रीष्टतिर हेरौँ
+</h3>
+
+<p>
+आफ्नो कमजोरी र पापमा मात्र नअड्किऔँ।
+येशू ख्रीष्टतिर हेर्दै उहाँको अनुग्रहमा
+जीवन बिताऔँ।
+</p>
+
+<a class="btn" href="path-3.html">
+सन्देश पढ्नुहोस् →
+</a>
+
 </article>
+
+
+<!-- PATH 02 -->
+
 <article class="card">
-<div class="number">PATH 02</div>
-<h3>ईसाई सङ्गति के हो?</h3>
-<p>ईसाई जीवनको मुख्य सङ्गति येशू ख्रीष्टसँग हो। उहाँसँगको सम्बन्ध बलियो बनाउँदै जानु हाम्रो पहिलो प्राथमिकता हो।</p>
-<a class="btn" href="path-2.html">सन्देश पढ्नुहोस् →</a>
+
+<div class="card-top">
+
+<div class="number">
+PATH 02
+</div>
+
+</div>
+
+<h3>
+ईसाई सङ्गति के हो?
+</h3>
+
+<p>
+ईसाई जीवनको मुख्य सङ्गति येशू ख्रीष्टसँग हो।
+उहाँसँगको सम्बन्ध बलियो बनाउँदै जानु
+हाम्रो पहिलो प्राथमिकता हो।
+</p>
+
+<a class="btn" href="path-2.html">
+सन्देश पढ्नुहोस् →
+</a>
+
 </article>
+
+
+<!-- PATH 01 -->
+
+<article class="card old">
+
+<div class="card-top">
+
+<div class="number">
+PATH 01
+</div>
+
+</div>
+
+<h3>
+जीवनको गोल्यतलाई परास्त गरौँ
+</h3>
+
+<p>
+आफ्नो शक्तिमा होइन, परमेश्वरको शक्तिमा
+भर परौँ। डरमा होइन, विश्वासमा अघि बढौँ।
+</p>
+
+<a class="btn" href="path-1.html">
+सन्देश पढ्नुहोस् →
+</a>
+
+</article>
+
+
 </section>
+
 </main>
 
+
 <footer>
-<p>आत्मिक जीवनको सन्देश</p>
-<p>परमेश्वरको वचन • विश्वास • आशा • प्रेम</p>
-<p>© 2026 Sagar Pakhrin</p>
+
+<p>
+<strong>आत्मिक जीवनको सन्देश</strong>
+</p>
+
+<p>
+परमेश्वरको वचन • विश्वास • आशा • प्रेम
+</p>
+
+<p>
+© 2026 Sagar Pakhrin
+</p>
+
 </footer>
+
 </body>
 </html>

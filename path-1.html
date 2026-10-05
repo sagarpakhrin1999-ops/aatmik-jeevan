@@ -227,6 +227,8 @@ max-width:330px
 }
 }
 </style>
+    <script data-goatcounter="https://aatmikjeevan.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 
 <body>
@@ -375,6 +377,312 @@ max-width:330px
 </footer>
 
 <button class="top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+
+<!-- DEVOTIONAL-ACTIONS-V1 -->
+<section class="dev-actions">
+
+<h2>🙏 तपाईंको प्रतिक्रिया</h2>
+
+<p class="action-subtitle">
+यो सन्देश तपाईंलाई आशिष् भयो भने आफ्नो प्रतिक्रिया दिनुहोस्।
+</p>
+
+<div class="action-grid">
+
+<button id="likeBtn" onclick="devAction('likes')">
+<span class="action-icon">❤️</span>
+<span>Like</span>
+<strong id="likes-count">0</strong>
+</button>
+
+<button id="readBtn" onclick="devAction('reads')">
+<span class="action-icon">📖</span>
+<span>मैले पढें</span>
+<strong id="reads-count">0</strong>
+</button>
+
+<button onclick="shareDevotional()">
+<span class="action-icon">🔗</span>
+<span>Share</span>
+<strong id="shares-count">0</strong>
+</button>
+
+</div>
+
+<div id="action-message"></div>
+
+</section>
+
+<style>
+.dev-actions{
+margin:30px 0;
+padding:26px 20px;
+background:#fff;
+border:1px solid #e5e7eb;
+border-radius:22px;
+box-shadow:0 8px 28px rgba(15,23,42,.08);
+text-align:center;
+}
+
+.dev-actions h2{
+margin:0 0 6px;
+color:#172554;
+font-size:23px;
+}
+
+.action-subtitle{
+margin:0 0 20px;
+color:#6b7280;
+font-size:14px;
+}
+
+.action-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+}
+
+.action-grid button{
+border:1px solid #e5e7eb;
+background:#f8fafc;
+border-radius:16px;
+padding:14px 7px;
+cursor:pointer;
+font-family:inherit;
+color:#172033;
+transition:.2s;
+}
+
+.action-grid button:hover{
+transform:translateY(-3px);
+box-shadow:0 7px 20px rgba(0,0,0,.10);
+}
+
+.action-grid button:active{
+transform:scale(.97);
+}
+
+.action-icon{
+display:block;
+font-size:25px;
+margin-bottom:4px;
+}
+
+.action-grid button span:not(.action-icon){
+display:block;
+font-size:13px;
+font-weight:bold;
+}
+
+.action-grid strong{
+display:block;
+margin-top:5px;
+font-size:18px;
+color:#1e3a8a;
+}
+
+.action-grid button.done{
+background:#eef2ff;
+border-color:#818cf8;
+}
+
+#action-message{
+min-height:22px;
+margin-top:15px;
+font-size:14px;
+color:#15803d;
+font-weight:bold;
+}
+
+@media(max-width:600px){
+.dev-actions{
+padding:22px 12px;
+}
+
+.action-grid{
+gap:8px;
+}
+
+.action-grid button{
+padding:13px 4px;
+}
+
+.action-icon{
+font-size:23px;
+}
+
+.action-grid button span:not(.action-icon){
+font-size:11px;
+}
+}
+</style>
+
+<script>
+const SUPABASE_URL = "https://mbgnybjpdvambimmerea.supabase.co";
+const SUPABASE_KEY = "YOUR_PUBLISHABLE_KEY";
+const DEVOTIONAL_PAGE = "path-1";
+
+const headers = {
+  "apikey": SUPABASE_KEY,
+  "Authorization": "Bearer " + SUPABASE_KEY
+};
+
+async function loadStats() {
+  try {
+    const response = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/devotional_stats?select=likes,reads,shares&page=eq." +
+      DEVOTIONAL_PAGE,
+      {headers}
+    );
+
+    if (!response.ok) return;
+
+    const data = await response.json();
+
+    if (data.length > 0) {
+      document.getElementById("likes-count").textContent =
+        data[0].likes ?? 0;
+
+      document.getElementById("reads-count").textContent =
+        data[0].reads ?? 0;
+
+      document.getElementById("shares-count").textContent =
+        data[0].shares ?? 0;
+    }
+  } catch (error) {
+    console.log("Stats error:", error);
+  }
+}
+
+async function devAction(action) {
+
+  const storageKey =
+    "aatmik-" + DEVOTIONAL_PAGE + "-" + action;
+
+  if (localStorage.getItem(storageKey)) {
+    document.getElementById("action-message").textContent =
+      action === "likes"
+      ? "❤️ तपाईंले Like गरिसक्नुभएको छ।"
+      : "📖 तपाईंले यो सन्देश पढिसक्नुभएको छ।";
+    return;
+  }
+
+  try {
+
+    const getResponse = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/devotional_stats?select=likes,reads,shares&page=eq." +
+      DEVOTIONAL_PAGE,
+      {headers}
+    );
+
+    const data = await getResponse.json();
+
+    if (!data.length) {
+      document.getElementById("action-message").textContent =
+        "⚠️ यो पेजको record भेटिएन।";
+      return;
+    }
+
+    const row = data[0];
+
+    const newValues = {
+      likes: Number(row.likes || 0),
+      reads: Number(row.reads || 0),
+      shares: Number(row.shares || 0)
+    };
+
+    newValues[action]++;
+
+    const updateResponse = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/devotional_stats?page=eq." +
+      DEVOTIONAL_PAGE,
+      {
+        method:"PATCH",
+        headers:{
+          ...headers,
+          "Content-Type":"application/json",
+          "Prefer":"return=representation"
+        },
+        body:JSON.stringify(newValues)
+      }
+    );
+
+    if (!updateResponse.ok) {
+      throw new Error("Update failed");
+    }
+
+    localStorage.setItem(storageKey,"1");
+
+    document.getElementById(action === "likes"
+      ? "likeBtn"
+      : "readBtn"
+    )?.classList.add("done");
+
+    document.getElementById("action-message").textContent =
+      action === "likes"
+      ? "❤️ धन्यवाद! तपाईंको Like सुरक्षित भयो।"
+      : "📖 धन्यवाद! तपाईंले पढ्नुभएको record भयो।";
+
+    loadStats();
+
+  } catch(error) {
+    console.log("Action error:",error);
+
+    document.getElementById("action-message").textContent =
+      "⚠️ अहिले update हुन सकेन।";
+  }
+}
+
+async function shareDevotional() {
+
+  const shareData = {
+    title: document.title,
+    text: "आत्मिक जीवनको सन्देश",
+    url: window.location.href
+  };
+
+  try {
+
+    if (navigator.share) {
+      await navigator.share(shareData);
+      await devAction("shares");
+    } else {
+
+      await navigator.clipboard.writeText(window.location.href);
+
+      await devAction("shares");
+
+      document.getElementById("action-message").textContent =
+        "🔗 Link copy भयो। अब जहाँ चाहनुहुन्छ Share गर्नुहोस्।";
+    }
+
+  } catch(error) {
+    console.log("Share cancelled");
+  }
+}
+
+function restoreButtons() {
+
+  if (localStorage.getItem(
+    "aatmik-" + DEVOTIONAL_PAGE + "-likes"
+  )) {
+    document.getElementById("likeBtn")?.classList.add("done");
+  }
+
+  if (localStorage.getItem(
+    "aatmik-" + DEVOTIONAL_PAGE + "-reads"
+  )) {
+    document.getElementById("readBtn")?.classList.add("done");
+  }
+}
+
+loadStats();
+restoreButtons();
+</script>
 
 </body>
 </html>
