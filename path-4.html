@@ -701,74 +701,81 @@ $("readBtn").addEventListener("click", function () {
 });
 
 $("shareBtn").addEventListener("click", async function () {
+    const cleanUrl = location.origin + location.pathname;
+    const shareData = {
+        title: document.title,
+        text: "आत्मिक जीवन — यो आत्मिक सन्देश पढ्नुहोस्",
+        url: cleanUrl
+    };
+
+    if (navigator.share) {
+        try {
+            await navigator.share(shareData);
+            await recordShare();
+            return;
+        } catch (e) {
+            if (e.name === "AbortError") return;
+            console.log("Share failed:", e);
+        }
+    }
 
     try {
-
-        const cleanUrl = location.origin + location.pathname;
-
-        const shareData = {
-            title: document.title,
-            text: "आत्मिक जीवन — यो आत्मिक सन्देश पढ्नुहोस्",
-            url: cleanUrl
-        };
-
-        if (navigator.share) {
-
-            await navigator.share(shareData);
-
-        } else {
-
+        if (navigator.clipboard && window.isSecureContext) {
             await navigator.clipboard.writeText(cleanUrl);
-
-            alert("🔗 Link copied भयो।");
-
+        } else {
+            const input = document.createElement("textarea");
+            input.value = cleanUrl;
+            input.style.position = "fixed";
+            input.style.opacity = "0";
+            document.body.appendChild(input);
+            input.select();
+            const copied = document.execCommand("copy");
+            input.remove();
+            if (!copied) throw new Error("Copy failed");
         }
-
-        const key = storageKey("shares");
-
-        if (!localStorage.getItem(key)) {
-
-            const getRes = await fetch(
-                SUPABASE_URL +
-                "/rest/v1/devotional_stats?select=shares&page=eq." +
-                encodeURIComponent(page),
-                {
-                    headers: headers
-                }
-            );
-
-            const rows = await getRes.json();
-
-            if (rows.length) {
-
-                await fetch(
-                    SUPABASE_URL +
-                    "/rest/v1/devotional_stats?page=eq." +
-                    encodeURIComponent(page),
-                    {
-                        method: "PATCH",
-                        headers: {
-                            ...headers,
-                            "Prefer": "return=minimal"
-                        },
-                        body: JSON.stringify({
-                            shares: (rows[0].shares || 0) + 1
-                        })
-                    }
-                );
-
-                localStorage.setItem(key, "1");
-
-                await getStats();
-            }
-        }
-
+        alert("लिंक कपी भयो। Messenger वा WhatsApp मा Paste गर्नुहोस्।");
+        await recordShare();
     } catch (e) {
-
-        console.log("Share cancelled or failed:", e);
-
+        prompt("लिंक कपी गर्नुहोस्:", cleanUrl);
     }
 });
+
+async function recordShare() {
+    const key = storageKey("shares");
+    if (localStorage.getItem(key)) return;
+
+    const getRes = await fetch(
+        SUPABASE_URL +
+        "/rest/v1/devotional_stats?select=shares&page=eq." +
+        encodeURIComponent(page),
+        { headers: headers }
+    );
+
+    const rows = await getRes.json();
+
+    if (rows.length) {
+        const updateRes = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/devotional_stats?page=eq." +
+            encodeURIComponent(page),
+            {
+                method: "PATCH",
+                headers: {
+                    ...headers,
+                    "Prefer": "return=minimal"
+                },
+                body: JSON.stringify({
+                    shares: (rows[0].shares || 0) + 1
+                })
+            }
+        );
+
+        if (updateRes.ok) {
+            localStorage.setItem(key, "1");
+            await getStats();
+        }
+    }
+}
 
 
 $("commentBtn").addEventListener("click", async function () {
