@@ -346,10 +346,12 @@ $("shareBtn").addEventListener("click", async function () {
 
     try {
 
+        const cleanUrl = location.origin + location.pathname;
+
         const shareData = {
             title: document.title,
             text: "आत्मिक जीवन — यो आत्मिक सन्देश पढ्नुहोस्",
-            url: location.href
+            url: cleanUrl
         };
 
         if (navigator.share) {
@@ -358,7 +360,7 @@ $("shareBtn").addEventListener("click", async function () {
 
         } else {
 
-            await navigator.clipboard.writeText(location.href);
+            await navigator.clipboard.writeText(cleanUrl);
 
             alert("🔗 Link copied भयो।");
 
